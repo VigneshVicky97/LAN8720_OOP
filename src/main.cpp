@@ -5,8 +5,6 @@
 
 #include <WebServer_WT32_ETH01.h>
 
-WebServer server(80);
-
 // Select the IP address according to your local network
 IPAddress myIP(192, 168, 1, 232);
 IPAddress myGW(192, 168, 1, 1);
@@ -14,35 +12,6 @@ IPAddress mySN(255, 255, 255, 0);
 
 // Google DNS Server IP
 IPAddress myDNS(8, 8, 8, 8);
-
-void handleRoot()
-{
-  String html = F("Hello from HelloServer running on ");
-
-  html += String(BOARD_NAME); 
- 
-  server.send(200, F("text/plain"), html);
-}
-
-void handleNotFound()
-{
-  String message = F("File Not Found\n\n");
-  
-  message += F("URI: ");
-  message += server.uri();
-  message += F("\nMethod: ");
-  message += (server.method() == HTTP_GET) ? F("GET") : F("POST");
-  message += F("\nArguments: ");
-  message += server.args();
-  message += F("\n");
-  
-  for (uint8_t i = 0; i < server.args(); i++)
-  {
-    message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
-  }
-  
-  server.send(404, F("text/plain"), message);
-}
 
 void setup()
 {   
@@ -65,22 +34,11 @@ void setup()
 
   WT32_ETH01_waitForConnect();
 
-  server.on(F("/"), handleRoot);
-
-  server.on(F("/inline"), []() 
-  {
-    server.send(200, F("text/plain"), F("This works as well"));
-  });
-
-  server.onNotFound(handleNotFound);
-
-  server.begin();
-
   Serial.print(F("HTTP EthernetWebServer is @ IP : "));
   Serial.println(ETH.localIP());
 }
 
 void loop()
 {
-  server.handleClient();
+  
 }
