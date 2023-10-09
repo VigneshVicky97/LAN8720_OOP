@@ -1,3 +1,4 @@
+#include <WebServer_WT32_ETH01.h>
 #include "LAN8720.h"
 
 // Select the IP address according to your local network

@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef LAN8720_H
 #define LAN8720_H
 
@@ -6,7 +8,9 @@
 #define _ETHERNET_WEBSERVER_LOGLEVEL_       3
 
 #include "Arduino.h"
-#include <WebServer_WT32_ETH01.h>
+// Can be included as many times as necessary, without `Multiple Definitions` Linker Error
+#include "WebServer_WT32_ETH01.hpp"     //https://github.com/khoih-prog/WebServer_WT32_ETH01
+
 
 class LAN8720
 {
@@ -15,46 +19,16 @@ class LAN8720
     IPAddress myIP;
     IPAddress myGW;
     IPAddress mySN;
-
     // Google DNS Server IP
     IPAddress myDNS;
 
   public:
 
-    LAN8720()
-    {
-    }
+    LAN8720() {}
 
-    void init()
-    {
-      Serial.print("\nStarting HelloServer on " + String(ARDUINO_BOARD));
-      Serial.println(" with " + String(SHIELD_TYPE));
-      Serial.println(WEBSERVER_WT32_ETH01_VERSION);
-
-      // To be called before ETH.begin()
-      WT32_ETH01_onEvent();
-
-      ETH.begin(ETH_PHY_ADDR, ETH_PHY_POWER);
-    }
-
-    void config(IPAddress local_ip, IPAddress gateway, IPAddress subnet, IPAddress dns1)
-    {
-      myIP = local_ip;
-      myGW = gateway;
-      mySN = subnet;
-      myDNS = dns1;
-      // Static IP, leave without this line to get IP via DHCP
-      //bool config(IPAddress local_ip, IPAddress gateway, IPAddress subnet, IPAddress dns1 = 0, IPAddress dns2 = 0);
-      ETH.config(myIP, myGW, mySN, myDNS);
-    }
-
-    void connect()
-    {
-      WT32_ETH01_waitForConnect();
-
-      Serial.print(F("HTTP EthernetWebServer is @ IP : "));
-      Serial.println(ETH.localIP());
-    }
+    void init();
+    void config(IPAddress local_ip, IPAddress gateway, IPAddress subnet, IPAddress dns1);
+    void connect();
 };
 
 #endif
